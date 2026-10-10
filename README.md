@@ -1,3 +1,6 @@
+# Fork Notes
+Had some problems with the upstream, so I hacked the Dockerfile to add `libfido2` and did some workarounds for some build issues. 
+
 # ProtonMail IMAP/SMTP Bridge Docker Container
 
 ![version badge](https://img.shields.io/docker/v/shenxn/protonmail-bridge)
