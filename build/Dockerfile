@@ -4,10 +4,13 @@ FROM debian:sid-slim AS build
 ARG version
 
 # Install dependencies
-RUN apt-get update && apt-get install -y golang build-essential libsecret-1-dev
+RUN apt-get update && apt-get install -y golang build-essential libsecret-1-dev libfido2-dev libcbor-dev
 
 # Build
-ADD https://github.com/ProtonMail/proton-bridge.git#${version} /build/
+RUN apt-get update && apt-get install -y --no-install-recommends git ca-certificates
+RUN git clone --depth 1 -b ${version} https://github.com/ProtonMail/proton-bridge.git /build
+WORKDIR /build
+RUN make build-nogui vault-editor
 WORKDIR /build/
 RUN make build-nogui vault-editor
 
@@ -19,7 +22,7 @@ EXPOSE 143/tcp
 
 # Install dependencies and protonmail bridge
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends socat pass libsecret-1-0 ca-certificates \
+    && apt-get install -y --no-install-recommends socat pass libsecret-1-0 ca-certificates libfido2-1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy bash scripts
